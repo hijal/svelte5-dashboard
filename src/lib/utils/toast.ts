@@ -1,5 +1,5 @@
 import { CircleAlert, CircleCheckIcon, CircleX, Info } from 'lucide-svelte';
-import toast from 'svelte-french-toast';
+import toast from 'svelte-5-french-toast';
 
 export function createSuccessToast(message: string) {
     toast.success(message, {

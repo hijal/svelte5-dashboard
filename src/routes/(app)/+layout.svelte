@@ -2,7 +2,7 @@
     import '../../app.css';
     import type { Snippet } from 'svelte';
     import { page } from '$app/state';
-    import { Toaster } from 'svelte-french-toast';
+    import { Toaster } from 'svelte-5-french-toast';
     import { getFlash } from 'sveltekit-flash-message';
     import Sidebar from '$components/layout/Sidebar.svelte';
     import Navbar from '$components/layout/Navbar.svelte';

@@ -1,10 +1,10 @@
 <script lang="ts">
     import '../../app.css';
     import { page } from '$app/state';
-    import { createErrorToast, createSuccessToast } from '$utils/toast';
     import type { Snippet } from 'svelte';
-    import { Toaster } from 'svelte-french-toast';
+    import { Toaster } from 'svelte-5-french-toast';
     import { getFlash } from 'sveltekit-flash-message';
+    import { createErrorToast, createSuccessToast } from '$utils/toast';
 
     interface Props {
         children: Snippet;
