@@ -1,28 +1,22 @@
 <script lang="ts">
     import Button from '$components/ui/Button.svelte';
     import Table from '$components/ui/Table.svelte';
-
-    import {
-        createErrorToast,
-        createSuccessToast,
-        createWarningToast,
-        createInfoToast,
-    } from '$utils/toast';
+    import { errorToast, infoToast, successToast, warningToast } from '$utils/toast.svelte';
 
     const showSuccessToast = () => {
-        createSuccessToast('This is a success toast!');
+        successToast('This is a success toast! 🎉');
     };
 
     const showErrorToast = () => {
-        createErrorToast('This is an error toast!');
+        errorToast('This is an error toast! 🚨');
     };
 
     const showWarningToast = () => {
-        createWarningToast('This is a warning toast!');
+        warningToast('This is a warning toast! ⚠️');
     };
 
     const showInfoToast = () => {
-        createInfoToast('This is an info toast!');
+        infoToast('This is an info toast! 👀');
     };
 </script>
 

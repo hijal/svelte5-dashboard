@@ -8,7 +8,7 @@
     import { loginSchema, type LoginSchema } from './schema';
     import InputField from '$components/form-fields/InputField.svelte';
     import SubmitButton from '$components/form-fields/SubmitButton.svelte';
-    import { createErrorToast, createSuccessToast } from '$utils/toast';
+    import { errorToast, successToast } from '$utils/toast.svelte';
 
     interface Props {
         data: SuperValidated<Infer<LoginSchema>>;
@@ -20,11 +20,11 @@
         resetForm: false,
         onResult({ result }) {
             if (result.type === 'success') {
-                createSuccessToast('Login successful!');
+                successToast('Login successful!');
             }
         },
         onError({ result }) {
-            createErrorToast(result.error.message || 'Unknown error');
+            errorToast(result.error.message || 'Unknown error');
         },
     });
     const { form: formData, message, enhance } = form;

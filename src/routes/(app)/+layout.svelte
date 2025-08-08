@@ -2,11 +2,11 @@
     import '../../app.css';
     import type { Snippet } from 'svelte';
     import { page } from '$app/state';
-    import { Toaster } from 'svelte-5-french-toast';
     import { getFlash } from 'sveltekit-flash-message';
     import Sidebar from '$components/layout/Sidebar.svelte';
     import Navbar from '$components/layout/Navbar.svelte';
-    import { createErrorToast, createSuccessToast } from '$utils/toast';
+    import ToastContainer from '$components/ui/ToastContainer.svelte';
+    import { errorToast, successToast } from '$utils/toast.svelte';
 
     interface Props {
         children: Snippet;
@@ -21,9 +21,9 @@
     $effect(() => {
         if ($flash) {
             if ($flash.type === 'success') {
-                createSuccessToast($flash.message);
+                successToast($flash.message);
             } else {
-                createErrorToast($flash.message);
+                errorToast($flash.message);
             }
 
             $flash = undefined;
@@ -48,4 +48,4 @@
     </div>
 </div>
 
-<Toaster />
+<ToastContainer />

@@ -2,9 +2,9 @@
     import '../../app.css';
     import { page } from '$app/state';
     import type { Snippet } from 'svelte';
-    import { Toaster } from 'svelte-5-french-toast';
     import { getFlash } from 'sveltekit-flash-message';
-    import { createErrorToast, createSuccessToast } from '$utils/toast';
+    import { errorToast, successToast } from '$utils/toast.svelte';
+    import ToastContainer from '$components/ui/ToastContainer.svelte';
 
     interface Props {
         children: Snippet;
@@ -16,17 +16,15 @@
     $effect(() => {
         if ($flash) {
             if ($flash.type === 'success') {
-                createSuccessToast($flash.message);
+                successToast($flash.message);
             } else {
-                createErrorToast($flash.message);
+                errorToast($flash.message);
             }
 
             $flash = undefined;
         }
     });
 </script>
-
-<Toaster position="bottom-right" />
 
 <main class="min-h-screen bg-gray-50 px-2 py-4">
     <div class="hidden px-2 py-0 lg:block">
@@ -38,3 +36,5 @@
         {@render children()}
     </div>
 </main>
+
+<ToastContainer />

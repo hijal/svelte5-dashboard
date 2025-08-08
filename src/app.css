@@ -123,21 +123,6 @@
 }
 
 @layer components {
-    .success-toast svg {
-        @apply text-success-base size-7;
-    }
-
-    .error-toast svg {
-        @apply text-error-base size-7;
-    }
-
-    .warning-toast svg {
-        @apply text-warning-base size-7;
-    }
-
-    .info-toast svg {
-        @apply text-info-base size-7;
-    }
 }
 
 @layer utilities {
