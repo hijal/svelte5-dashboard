@@ -36,6 +36,9 @@ jobs:
                   echo "Install dependencies..."
                   bun install --frozen-lockfile
 
+                  echo "PUBLIC_API_HOST: ${{ vars.PUBLIC_API_HOST }}" >> .env
+                  echo "PUBLIC_NODE_ENV: ${{ vars.PUBLIC_NODE_ENV }}" >> .env
+
                   echo "Build project..."
                   bun run build --mode preview
 
