@@ -1,0 +1,102 @@
+name: Deploy Preview and Run Tests
+
+on:
+    push:
+    pull_request:
+        branches:
+            - master
+        types:
+            - opened
+            - reopened
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    ci:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22.x'
+
+            - name: Setup bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Install Dependencies & Build
+              run: |
+                  echo "Install dependencies..."
+                  bun install --frozen-lockfile
+
+                  echo "Build project..."
+                  bun run build --mode preview
+
+            - name: Format & Lint Code
+              run: |
+                  echo "Running formatter..."
+                  bun run format
+                  echo "Running linter..."
+                  bun run lint
+              continue-on-error: false
+
+            - name: Type Check
+              run: |
+                  echo "Running type check..."
+                  bun run check
+              continue-on-error: false
+
+            - name: Run Unit Tests
+              run: |
+                  echo "Run unit tests..."
+                  bun run test:unit
+
+            - name: Deploy Preview Pages
+              run: |
+                  echo "Deploying preview...."
+
+            - name: Install Playwright
+              run: |
+                  echo "Installing Playwright..."  
+                  bunx playwright install --with-deps chromium
+
+            - name: Run e2e Tests
+              run: |
+                  echo "Run e2e tests..."
+                  bun run test:e2e
+
+            - name: Cleaning Up
+              run: |
+                  echo "cleanup..."
+                  rm -rf .tmp
+                  rm -rf .env
+
+    security:
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22.x'
+
+            - name: Setup bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Run Security Audit
+              run: |
+                  bun audit
+              continue-on-error: true

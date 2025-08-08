@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+@plugin "daisyui" {
+    themes:
+        light --default,
+        dark --prefersdark;
+}
+@plugin '@tailwindcss/typography';
+
+:root {
+    --raw-core-light-purple: #ede5f0;
+    --raw-core-dark-purple: #161141;
+
+    --raw-orange-light: #fceeea;
+    --raw-violet-blue-light: #ebedf9;
+    --raw-custard-light: #fffee3;
+    --raw-indigo-light: #fce7ea;
+
+    --raw-orange: #e95e33;
+    --raw-violet-blue: #333dff;
+    --raw-custard: #fffd77;
+    --raw-indigo: #4e0072;
+
+    --raw-orange-dark: #451c0f;
+    --raw-violet-blue-dark: #10163c;
+    --raw-custard-dark: #4c4b23;
+    --raw-indigo-dark: #280f34;
+
+    --raw-black: #010f0b;
+    --raw-gray-dark: #5f5e5e;
+    --raw-gray-base: #b4b4b4;
+    --raw-light-gray-blue: #f0f0f3;
+
+    --raw-green-link: #048649;
+    --raw-vivid-red: #e5102e;
+
+    --raw-success-light: #d1f2e3;
+    --raw-info-light: #ebedf9;
+    --raw-warning-light: #fff9eb;
+    --raw-error-light: #ffe4e4;
+
+    --raw-success-base: #06a561;
+    --raw-info-base: #384ccb;
+    --raw-warning-base: #ffcb3d;
+    --raw-error-base: #db3232;
+
+    --raw-success-dark: #01311d;
+    --raw-info-dark: #10163c;
+    --raw-warning-dark: #4c3c12;
+    --raw-error-dark: #44040d;
+
+    --raw-bg-ghost-white: #f7f9fb;
+
+    --raw-gray-light: #e0e0e0;
+    --raw-green-primary: #00ff88;
+}
+
+@theme {
+    --text-5xl: 2.75rem;
+
+    --color-light-purple: var(--raw-core-light-purple);
+    --color-dark-purple: var(--raw-core-dark-purple);
+
+    --color-orange-light: var(--raw-orange-light);
+    --color-violet-blue-light: var(--raw-violet-blue-light);
+    --color-custard-light: var(--raw-custard-light);
+    --color-indigo-light: var(--raw-indigo-light);
+
+    --color-orange: var(--raw-orange);
+    --color-violet-blue: var(--raw-violet-blue);
+    --color-custard: var(--raw-custard);
+    --color-indigo: var(--raw-indigo);
+
+    --color-orange-dark: var(--raw-orange-dark);
+    --color-violet-blue-dark: var(--raw-violet-blue-dark);
+    --color-custard-dark: var(--raw-custard-dark);
+    --color-indigo-dark: var(--raw-indigo-dark);
+
+    --color-black: var(--raw-black);
+    --color-gray-dark: var(--raw-gray-dark);
+    --color-gray-base: var(--raw-gray-base);
+    --color-light-gray-blue: var(--raw-light-gray-blue);
+
+    --color-green-link: var(--raw-green-link);
+    --color-vivid-red: var(--raw-vivid-red);
+
+    --color-success-light: var(--raw-success-light);
+    --color-info-light: var(--raw-info-light);
+    --color-warning-light: var(--raw-warning-light);
+    --color-error-light: var(--raw-error-light);
+
+    --color-success-base: var(--raw-success-base);
+    --color-info-base: var(--raw-info-base);
+    --color-warning-base: var(--raw-warning-base);
+    --color-error-base: var(--raw-error-base);
+
+    --color-success-dark: var(--raw-success-dark);
+    --color-info-dark: var(--raw-info-dark);
+    --color-warning-dark: var(--raw-warning-dark);
+    --color-error-dark: var(--raw-error-dark);
+
+    --color-ghost-white: var(--raw-bg-ghost-white);
+
+    --color-gray-light: var(--raw-gray-light);
+
+    --color-green-primary: var(--raw-green-primary);
+
+    --color-dark-purple-hover: color-mix(in srgb, var(--raw-core-dark-purple) 90%, black);
+    --color-gray-hover: color-mix(in srgb, var(--raw-light-gray-blue) 90%, black);
+}
+
+@layer base {
+    html {
+        @apply scroll-smooth antialiased;
+    }
+
+    body {
+        @apply bg-ghost-white;
+        font-family: 'DM Sans', sans-serif;
+        font-feature-settings: 'liga' 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer components {
+    .success-toast svg {
+        @apply text-success-base size-7;
+    }
+
+    .error-toast svg {
+        @apply text-error-base size-7;
+    }
+
+    .warning-toast svg {
+        @apply text-warning-base size-7;
+    }
+
+    .info-toast svg {
+        @apply text-info-base size-7;
+    }
+}
+
+@layer utilities {
+}
