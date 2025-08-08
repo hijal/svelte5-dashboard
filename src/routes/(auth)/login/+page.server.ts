@@ -3,9 +3,9 @@ import { zod4 } from 'sveltekit-superforms/adapters';
 import { loginSchema } from './schema';
 import { fail } from 'sveltekit-superforms';
 import { getApi } from '$lib/apiClient/axiosInstance';
-import { PUBLIC_NODE_ENV } from '$env/static/public';
 import { AxiosError } from 'axios';
 import { redirect } from 'sveltekit-flash-message/server';
+import { env } from '$env/dynamic/public';
 
 export const load = async () => {
     const form = await superValidate(zod4(loginSchema));
@@ -62,7 +62,7 @@ export const actions = {
                 path: '/',
                 httpOnly: true,
                 sameSite: 'strict',
-                secure: PUBLIC_NODE_ENV === 'production',
+                secure: env.PUBLIC_NODE_ENV === 'production',
                 maxAge: 60 * 30,
             });
 

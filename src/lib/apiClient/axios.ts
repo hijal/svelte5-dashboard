@@ -1,9 +1,9 @@
 import axios from 'axios';
 import type { RequestEvent } from '@sveltejs/kit';
-import { PUBLIC_API_HOST } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export function createAxios(event?: RequestEvent) {
-    const baseURL = PUBLIC_API_HOST || 'http://localhost:5173';
+    const baseURL = env.PUBLIC_API_HOST || 'http://localhost:5173';
 
     const headers: Record<string, string> = {};
 
