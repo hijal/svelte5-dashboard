@@ -123,6 +123,9 @@
 }
 
 @layer components {
+    .select {
+        @apply focus:outline-none!;
+    }
 }
 
 @layer utilities {

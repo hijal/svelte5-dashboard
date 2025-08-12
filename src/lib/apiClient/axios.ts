@@ -6,9 +6,7 @@ export const cache = new Map<string, { data: unknown; timestamp: number }>();
 export const CACHE_DURATION = 5 * 60 * 1000;
 
 export function createAxios(event?: RequestEvent): AxiosInstance {
-    const baseURL =
-        env.PUBLIC_API_HOST ||
-        (import.meta.env.DEV ? 'http://localhost:5173' : 'https://api.yourdomain.com');
+    const baseURL = env.PUBLIC_API_HOST || 'http://localhost:5173';
 
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
