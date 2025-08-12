@@ -1,11 +1,18 @@
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 import type { RequestEvent } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 
-export function createAxios(event?: RequestEvent) {
-    const baseURL = env.PUBLIC_API_HOST || 'http://localhost:5173';
+export const cache = new Map<string, { data: unknown; timestamp: number }>();
+export const CACHE_DURATION = 5 * 60 * 1000;
 
-    const headers: Record<string, string> = {};
+export function createAxios(event?: RequestEvent): AxiosInstance {
+    const baseURL =
+        env.PUBLIC_API_HOST ||
+        (import.meta.env.DEV ? 'http://localhost:5173' : 'https://api.yourdomain.com');
+
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+    };
 
     if (event?.request.headers.has('cookie')) {
         headers['cookie'] = event.request.headers.get('cookie')!;
@@ -17,4 +24,16 @@ export function createAxios(event?: RequestEvent) {
         withCredentials: true,
         timeout: 10000,
     });
+}
+
+export function clearApiCache(): void {
+    cache.clear();
+}
+
+export function invalidateApiCache(urlPattern: string): void {
+    for (const key of cache.keys()) {
+        if (key.includes(urlPattern)) {
+            cache.delete(key);
+        }
+    }
 }

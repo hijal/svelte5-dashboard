@@ -8,6 +8,7 @@ declare module '$env/dynamic/public' {
 }
 
 declare module '$env/dynamic/private' {
-    // example:
-    // export const API_KEY: string;
+    export const env: {
+        JWT_SECRET: string;
+    };
 }

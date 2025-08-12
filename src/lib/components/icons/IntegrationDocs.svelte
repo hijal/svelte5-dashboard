@@ -1,6 +1,21 @@
-<script lang="ts"></script>
+<script lang="ts">
+    interface Props {
+        class?: string;
+        width?: number;
+        height?: number;
+    }
 
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    const { class: classname, width = 20, height = 20 }: Props = $props();
+</script>
+
+<svg
+    {width}
+    {height}
+    class={classname}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+>
     <path
         d="M18 16L19.8398 17.5858C20.6133 18.2525 21 18.5858 21 19C21 19.4142 20.6133 19.7475 19.8398 20.4142L18 22"
         stroke="#5F5E5E"

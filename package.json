@@ -64,7 +64,6 @@
         "formsnap": "^2.0.1",
         "lucide-svelte": "^0.523.0",
         "oslo": "^1.2.1",
-        "svelte-french-toast": "2.0.0-alpha.0",
         "svelte-select": "^5.8.3",
         "svelte-toolbelt": "^0.9.3",
         "sveltekit-flash-message": "^2.4.6",

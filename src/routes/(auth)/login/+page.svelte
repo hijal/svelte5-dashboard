@@ -65,6 +65,7 @@
                     class="border-gray-light flex flex-col justify-center rounded-lg border-[1px] bg-white p-8 lg:p-12"
                 >
                     <div class="mx-auto w-full">
+                        redirectTo
                         <div class="mb-8">
                             <h2 class="text-dark-purple mt-0 mb-2 text-5xl font-bold">Login</h2>
                             <p class="text-gray-dark text-lg font-normal">Continue to Triple A</p>

@@ -38,6 +38,7 @@
 {#if $message}<h3>{$message}</h3>{/if}
 
 <form class="space-y-6" method="POST" action="?" use:enhance>
+    <InputField type="hidden" {form} fieldName="redirectTo" />
     <div>
         <label for="email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
         <InputField {form} fieldName="email" type="email" placeholder="Type your email">

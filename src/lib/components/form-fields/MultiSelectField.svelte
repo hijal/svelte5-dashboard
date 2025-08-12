@@ -33,9 +33,9 @@
 
     function handleChange({ detail }: { detail: { value: string }[] }) {
         if (maxSelected && $values.length >= maxSelected) {
-            $values = $values.slice(0, maxSelected); // Limit selection
+            $values = $values.slice(0, maxSelected);
         } else {
-            $values = detail.map((item: { value: string }) => item.value); // Update if within the limit
+            $values = detail.map((item: { value: string }) => item.value);
         }
     }
 
