@@ -1,55 +1,38 @@
 <script lang="ts">
-    import Button from '$components/ui/Button.svelte';
     import Table from '$components/ui/Table.svelte';
-    import { errorToast, infoToast, successToast, warningToast } from '$utils/toast.svelte';
+    import type { PageData } from './$types';
 
-    const showSuccessToast = () => {
-        successToast('This is a success toast! 🎉');
-    };
+    interface Props {
+        data: PageData;
+    }
 
-    const showErrorToast = () => {
-        errorToast('This is an error toast! 🚨');
-    };
-
-    const showWarningToast = () => {
-        warningToast('This is a warning toast! ⚠️');
-    };
-
-    const showInfoToast = () => {
-        infoToast('This is an info toast! 👀');
-    };
+    const { data }: Props = $props();
 </script>
 
 <svelte:head>
     <title>Home | Triple-A Merchant Dashboard</title>
 </svelte:head>
 
-<div class="flex flex-col justify-center gap-4">
-    <h1 class="text-dark-purple text-center text-5xl">
-        Welcome to the Triple-A Merchant Dashboard
-    </h1>
-
-    <div class="grid grid-cols-2 gap-4 text-center md:grid-cols-4">
-        <Button variant="default">Default</Button>
-        <Button variant="outline">Outline</Button>
-        <Button variant="ghost">Ghost</Button>
-        <Button variant="link">Link</Button>
-        <Button variant="success" onclick={showSuccessToast}>Success</Button>
-        <Button variant="error" onclick={showErrorToast}>Error</Button>
-        <Button variant="secondary" onclick={showInfoToast}>Secondary</Button>
-        <Button variant="warning" onclick={showWarningToast}>Warning</Button>
-    </div>
-
-    <Table data={[] as { firstName: string; lastName: string; username: string }[]}>
+<div class="flex max-w-full flex-col justify-center gap-4 px-4">
+    <Table data={data.users}>
         {#snippet header()}
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Username</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Country</th>
+            <th>Created At</th>
+            <th>Updated At</th>
         {/snippet}
-        {#snippet row(d)}
-            <td>{d.firstName}</td>
-            <td>{d.lastName}</td>
-            <td>{d.username}</td>
+
+        {#snippet row(user)}
+            <td>{user.first_name}</td>
+            <td>{user.last_name}</td>
+            <td>{user.email}</td>
+            <td>{user.gender}</td>
+            <td>{user.country}</td>
+            <td>{new Date(user.created_at).toLocaleString()}</td>
+            <td>{new Date(user.updated_at).toLocaleString()}</td>
         {/snippet}
     </Table>
 </div>

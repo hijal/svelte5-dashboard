@@ -1,15 +1,8 @@
 <script lang="ts">
+    import type { User } from '$lib/interfaces';
+
     interface Props {
-        data?: {
-            id: number;
-            first_name: string;
-            last_name: string;
-            email: string;
-            gender: string;
-            country: string;
-            created_at: string;
-            updated_at: string;
-        } | null;
+        data?: User | null;
     }
 
     const { data }: Props = $props();
@@ -22,11 +15,23 @@
     let testBtcBalances = ['USD 12,876.76', 'USD 5,000.00'];
 </script>
 
-<div class="flex items-center justify-between bg-white px-4 py-1.5 shadow-sm lg:px-6">
-    <div class="flex flex-wrap items-center gap-x-2">
+<div class="flex items-center justify-between space-x-4 bg-white px-8 py-1.5 shadow-sm lg:px-10">
+    <div class="lg:hidden">
+        <label for="drawer-toggle" class="btn btn-square btn-ghost lg:hidden">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+            </svg>
+        </label>
+    </div>
+    <div class="hidden grid-cols-4 gap-x-4 xl:grid">
         <div>
             <div class="mb-1 text-sm text-gray-500">Account</div>
-            <select class="select select-bordered select-sm w-full min-w-xs">
+            <select class="select select-bordered select-sm">
                 {#each accounts as acc (acc)}
                     <option>{acc}</option>
                 {/each}
@@ -36,7 +41,7 @@
         <div>
             <div class="mb-1 text-sm text-gray-500">Fiat Payout Balance</div>
             <div class="flex items-center">
-                <select class="select select-bordered select-sm w-full min-w-xs">
+                <select class="select select-bordered select-sm">
                     {#each fiatBalances as bal (bal)}
                         <option>{bal}</option>
                     {/each}
@@ -45,8 +50,8 @@
         </div>
 
         <div>
-            <div class="mb-1 text-sm text-gray-500">Crypto Payments/Payouts Balance</div>
-            <select class="select select-bordered select-sm w-full min-w-xs">
+            <div class="mb-1 truncate text-sm text-gray-500">Crypto Payments/Payouts Balance</div>
+            <select class="select select-bordered select-sm">
                 {#each cryptoBalances as bal (bal)}
                     <option>{bal}</option>
                 {/each}
@@ -54,8 +59,8 @@
         </div>
 
         <div>
-            <div class="mb-1 text-sm text-gray-500">Available Test BTC Balance</div>
-            <select class="select select-bordered select-sm w-full min-w-xs">
+            <div class="mb-1 truncate text-sm text-gray-500">Available Test BTC Balance</div>
+            <select class="select select-bordered select-sm">
                 {#each testBtcBalances as bal (bal)}
                     <option>{bal}</option>
                 {/each}
@@ -63,7 +68,7 @@
         </div>
     </div>
 
-    <div class="dropdown dropdown-end pt-2">
+    <div class="dropdown dropdown-end ml-auto pt-2">
         <div
             tabindex="0"
             role="button"

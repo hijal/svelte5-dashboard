@@ -8,6 +8,7 @@ import { loginSchema } from './schema';
 import { getApi } from '$lib/apiClient/axiosInstance';
 import { env } from '$env/dynamic/public';
 import { handleActionError } from '$lib/utils/errorHandler';
+import type { LoginResponse } from '$lib/interfaces';
 
 export const load = async ({ url }: RequestEvent) => {
     const redirectTo = url.searchParams.get('redirectTo') ?? '/';
@@ -27,7 +28,7 @@ export const actions: Actions = {
         const axios = getApi();
 
         const response = await axios
-            .post('/api/signin', formData, {
+            .post<LoginResponse>('/api/signin', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

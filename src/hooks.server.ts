@@ -1,8 +1,9 @@
-import { env } from '$env/dynamic/private';
 import { type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { validateJWT } from 'oslo/jwt';
 import { redirect } from 'sveltekit-flash-message/server';
+import { env } from '$env/dynamic/private';
+import type { DecodedToken } from '$lib/interfaces';
 
 const authSetup: Handle = async ({ event, resolve }) => {
     const cookieToken = event.cookies.get('session');
@@ -15,34 +16,27 @@ const authSetup: Handle = async ({ event, resolve }) => {
             return {
                 valid: false,
                 user: null,
+                token: null,
             };
         }
 
         try {
             const secretBuffer = new TextEncoder().encode(env.JWT_SECRET);
-            const result = (await validateJWT('HS256', secretBuffer, token)) as {
-                payload: {
-                    id: number;
-                    email: string;
-                    iat: number;
-                    exp: number;
-                };
+            const { payload } = (await validateJWT('HS256', secretBuffer, token)) as {
+                payload: DecodedToken;
             };
 
             return {
+                token,
                 valid: true,
-                user: {
-                    id: result.payload.id,
-                    email: result.payload.email,
-                    iat: result.payload.iat,
-                    exp: result.payload.exp,
-                },
+                user: payload,
             };
         } catch (error) {
             globalThis.console.error(error);
             return {
                 valid: false,
                 user: null,
+                token: null,
             };
         }
     };
@@ -54,16 +48,34 @@ const authGuard: Handle = async ({ event, resolve }) => {
 
     const isPublicRoute = publicRoutes.some((route) => event.url.pathname.startsWith(route));
 
-    if (!isPublicRoute) {
-        const { valid, user } = await event.locals.validateToken();
+    const isAuthRoute = (pathname: string): boolean => {
+        const authPatterns = ['/login', '/forgot-password'];
 
-        if (!valid) {
+        return authPatterns.some((pattern) => pathname.startsWith(pattern));
+    };
+
+    const isCurrentlyAuthRoute = isAuthRoute(event.url.pathname);
+
+    const { valid, user, token } = await event.locals.validateToken();
+
+    if (valid) {
+        event.locals.decodedToken = user;
+        event.locals.token = token;
+
+        if (isCurrentlyAuthRoute) {
+            const redirectTo = event.url.searchParams.get('redirectTo') ?? '/';
+            throw redirect(302, redirectTo);
+        }
+    } else {
+        if (event.cookies.get('session')) {
             event.cookies.delete('session', { path: '/' });
-            throw redirect(302, `/login?redirectTo=${event.url.pathname}`);
         }
 
-        event.locals.user = user;
+        if (!isPublicRoute) {
+            throw redirect(302, `/login?redirectTo=${event.url.pathname}`);
+        }
     }
+
     return resolve(event);
 };
 

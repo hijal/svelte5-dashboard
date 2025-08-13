@@ -1,36 +1,34 @@
-import type { LayoutServerLoad } from './$types';
 import { getApi } from '$lib/apiClient/axiosInstance';
+import type { User } from '$lib/interfaces';
+import { handleActionError, processError } from '$utils/errorHandler';
+import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async (event) => {
     const axios = getApi(event);
-    let user = null;
-    let isLoggedIn = false;
 
-    const response = await axios.get<{
-        data: {
-            id: number;
-            first_name: string;
-            last_name: string;
-            email: string;
-            gender: string;
-            country: string;
-            created_at: string;
-            updated_at: string;
-        };
-    }>('/api/user');
+    try {
+        const response = await axios.get<User>('/api/me');
 
-    if (response.status !== 200) {
+        if (response.status === 200) {
+            return {
+                user: response.data,
+            };
+        }
+
         return {
-            user,
-            isLoggedIn,
+            user: null,
+        };
+    } catch (error) {
+        const errorDetails = processError(error);
+
+        if (errorDetails.type === 'authentication') {
+            return handleActionError(error, event.url, event.cookies, {
+                redirectPath: '/login',
+            });
+        }
+
+        return {
+            user: null,
         };
     }
-
-    user = response.data.data;
-    isLoggedIn = true;
-
-    return {
-        user,
-        isLoggedIn,
-    };
 };

@@ -1,5 +1,13 @@
+import type { DecodedToken } from '$lib/interfaces';
+
 declare global {
     namespace App {
+        interface Error {
+            message: string;
+            type: string;
+            statusCode?: number;
+            fieldErrors?: object;
+        }
         interface Platform {
             env: Env;
             cf: CfProperties;
@@ -9,20 +17,11 @@ declare global {
         interface Locals {
             token?: string | null;
             isAuthenticated?: boolean;
-            user: {
-                id: number;
-                email: string;
-                iat: number;
-                exp: number;
-            } | null;
+            decodedToken: DecodedToken | null;
             validateToken: () => Promise<{
+                token: string | null;
                 valid: boolean;
-                user: {
-                    id: number;
-                    email: string;
-                    iat: number;
-                    exp: number;
-                } | null;
+                user: DecodedToken | null;
             }>;
         }
     }

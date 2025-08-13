@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import { redirect } from 'sveltekit-flash-message/server';
-import type { Cookies } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import { type Cookies } from '@sveltejs/kit';
 
 export type ErrorType =
     | 'validation'
@@ -80,12 +81,7 @@ export function processError(error: unknown): ErrorDetails {
         errorDetails.message = error.message;
         errorDetails.type = 'client';
     }
-    console.error('Error occurred:', {
-        type: errorDetails.type,
-        message: errorDetails.message,
-        statusCode: errorDetails.statusCode,
-        originalError: error,
-    });
+
     return errorDetails;
 }
 
@@ -106,17 +102,45 @@ export function handleRedirectError(
     );
 }
 
+export function handleThrowError(errorDetails: ErrorDetails): never {
+    const statusCode = errorDetails.statusCode ?? 500;
+
+    const errorBody = {
+        message: errorDetails.message,
+        type: errorDetails.type,
+        statusCode: statusCode,
+        ...(errorDetails.fieldErrors && { fieldErrors: errorDetails.fieldErrors }),
+    };
+
+    throw error(statusCode, errorBody);
+}
+
 export function handleActionError(
-    error: unknown,
+    err: unknown,
     url: URL,
     cookies: Cookies,
     options: {
         redirectPath?: string;
     } = {},
 ): Response {
-    if (error instanceof Response && error.status === 302) {
-        return error;
+    if (err instanceof Response && err.status === 302) {
+        return err;
     }
-    const errorDetails = processError(error);
+    const errorDetails = processError(err);
     return handleRedirectError(url, errorDetails, cookies, options.redirectPath);
+}
+
+export function handleThrowActionError(
+    err: unknown,
+    options: {
+        fallbackStatus?: number;
+    } = {},
+): never {
+    const errorDetails = processError(err);
+
+    if (options.fallbackStatus && !errorDetails.statusCode) {
+        errorDetails.statusCode = options.fallbackStatus;
+    }
+
+    return handleThrowError(errorDetails);
 }

@@ -41,7 +41,7 @@
     <div class="drawer-content flex flex-col">
         <Navbar data={data.user} />
 
-        <main class="flex-1 bg-gray-50 px-4 py-8">
+        <main class="flex-1 bg-gray-50 px-10 py-8">
             {@render children()}
         </main>
     </div>

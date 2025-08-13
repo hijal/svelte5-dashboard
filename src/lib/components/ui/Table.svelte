@@ -1,4 +1,4 @@
-<script lang="ts" generics="T extends Record<string, unknown>">
+<script lang="ts" generics="T">
     import type { Snippet } from 'svelte';
     import { page } from '$app/state';
     import { goto } from '$app/navigation';
@@ -9,9 +9,10 @@
         row: Snippet<[T]>;
         id?: string;
         class?: string;
+        enablePagination?: boolean;
     }
 
-    const { data, header, row, id, class: classname }: Props = $props();
+    const { data, header, row, id, class: classname, enablePagination = false }: Props = $props();
 
     const currentPage = $derived(Number(page.url.searchParams.get('page')) || 1);
     const hasData = $derived(data && data.length > 0);
@@ -49,10 +50,10 @@
         <thead class="not-prose text-main">
             <tr>{@render header()}</tr>
         </thead>
-        <tbody>
+        <tbody class="not-prose">
             {#if !hasData}
                 <tr>
-                    <td colspan="100" class="w-full text-center">No data available</td>
+                    <td colspan="100" class="w-full p-4 pb-0 text-center">No data available</td>
                 </tr>
             {:else}
                 {#each data as T[] as d (d)}
@@ -64,42 +65,44 @@
         </tbody>
     </table>
 
-    <nav class="mt-0 flex items-center justify-end" aria-label="Pagination">
-        <div class="flex items-center space-x-1">
-            <button
-                class="text-main rounded-sm rounded-l-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium transition hover:bg-gray-50
-                {canGoPrev ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}"
-                onclick={() => navigateToPage(currentPage - 1)}
-                disabled={!canGoPrev}
-            >
-                Prev
-            </button>
-
-            {#each pageNumbers as pageNum (pageNum)}
-                {@const isDisabled = isPageDisabled(pageNum)}
+    {#if enablePagination}
+        <nav class="mt-0 flex items-center justify-end" aria-label="Pagination">
+            <div class="flex items-center space-x-1">
                 <button
-                    class={`rounded-sm border px-3 py-1 text-sm font-medium transition 
+                    class="text-main rounded-sm rounded-l-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium transition hover:bg-gray-50
+                {canGoPrev ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}"
+                    onclick={() => navigateToPage(currentPage - 1)}
+                    disabled={!canGoPrev}
+                >
+                    Prev
+                </button>
+
+                {#each pageNumbers as pageNum (pageNum)}
+                    {@const isDisabled = isPageDisabled(pageNum)}
+                    <button
+                        class={`rounded-sm border px-3 py-1 text-sm font-medium transition 
                     ${
                         pageNum === currentPage
                             ? 'border-main bg-main text-white'
                             : 'text-primary-text border-gray-300 bg-white hover:bg-gray-50'
                     } 
                     ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
-                    disabled={isDisabled}
-                    onclick={() => navigateToPage(pageNum)}
-                >
-                    {pageNum}
-                </button>
-            {/each}
+                        disabled={isDisabled}
+                        onclick={() => navigateToPage(pageNum)}
+                    >
+                        {pageNum}
+                    </button>
+                {/each}
 
-            <button
-                class="text-primary-text rounded-sm rounded-r-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium transition hover:bg-gray-50
+                <button
+                    class="text-primary-text rounded-sm rounded-r-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium transition hover:bg-gray-50
                 {canGoNext ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}"
-                onclick={() => navigateToPage(currentPage + 1)}
-                disabled={!canGoNext}
-            >
-                Next
-            </button>
-        </div>
-    </nav>
+                    onclick={() => navigateToPage(currentPage + 1)}
+                    disabled={!canGoNext}
+                >
+                    Next
+                </button>
+            </div>
+        </nav>
+    {/if}
 </div>
