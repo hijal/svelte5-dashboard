@@ -17,7 +17,7 @@ declare global {
         interface Locals {
             token?: string | null;
             isAuthenticated?: boolean;
-            decodedToken: DecodedToken | null;
+            user: DecodedToken | null;
             validateToken: () => Promise<{
                 token: string | null;
                 valid: boolean;

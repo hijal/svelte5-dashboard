@@ -5,6 +5,8 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { env } from '$env/dynamic/private';
 import type { DecodedToken } from '$lib/interfaces';
 
+const PUBLIC_ROUTES = ['/login', '/forgot-password'];
+
 const authSetup: Handle = async ({ event, resolve }) => {
     const cookieToken = event.cookies.get('session');
     const bearerToken = event.request.headers.get('Authorization')?.split(' ')[1];
@@ -44,36 +46,25 @@ const authSetup: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-    const publicRoutes = ['/login', '/forgot-password'];
+    const { pathname } = event.url;
 
-    const isPublicRoute = publicRoutes.some((route) => event.url.pathname.startsWith(route));
+    const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 
-    const isAuthRoute = (pathname: string): boolean => {
-        const authPatterns = ['/login', '/forgot-password'];
-
-        return authPatterns.some((pattern) => pathname.startsWith(pattern));
-    };
-
-    const isCurrentlyAuthRoute = isAuthRoute(event.url.pathname);
+    if (isPublicRoute) {
+        return resolve(event);
+    }
 
     const { valid, user, token } = await event.locals.validateToken();
 
-    if (valid) {
-        event.locals.decodedToken = user;
-        event.locals.token = token;
+    if (!valid || !user) {
+        throw redirect(302, `/login?redirectTo=${pathname}&error=unauthenticated`);
+    }
 
-        if (isCurrentlyAuthRoute) {
-            const redirectTo = event.url.searchParams.get('redirectTo') ?? '/';
-            throw redirect(302, redirectTo);
-        }
-    } else {
-        if (event.cookies.get('session')) {
-            event.cookies.delete('session', { path: '/' });
-        }
+    event.locals.user = user;
+    event.locals.token = token;
 
-        if (!isPublicRoute) {
-            throw redirect(302, `/login?redirectTo=${event.url.pathname}`);
-        }
+    if (pathname === '/login') {
+        throw redirect(303, '/');
     }
 
     return resolve(event);
